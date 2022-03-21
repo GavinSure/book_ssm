@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>success</title>
+</head>
+<body>
+
+<h3>
+        <span>
+            激活成功,<strong>5</strong>秒后自动跳转登录页面
+            <a href="login.html">点我登录</a>
+        </span>
+</h3>
+</body>
+
+<script type="application/javascript">
+    let seconds = 5;
+    setInterval(function () {
+        if (seconds == 0) {
+            window.location.href = "/";
+        }
+        seconds--;
+        document.querySelector("strong").innerText = seconds;
+    }, 1000);
+</script>
+</html>

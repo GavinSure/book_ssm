@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发邮件</title>
+</head>
+<body>
+
+<form action="sendMailWithUploadFile" method="post" enctype="multipart/form-data">
+    接收者: <input type="text" value="790018823@qq.com" name="to"><br>
+    主题: <input type="text" name="subject"><br>
+    邮件内容: <input type="text" name="text"><br>
+    附件: <input type="file" name="attach" accept="image/*"><br>
+    <button type="submit">发送邮件</button>
+</form>
+
+</body>
+</html>

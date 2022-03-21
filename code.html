@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>用户邮箱验证码</title>
+
+		<!-- Google Font: Source Sans Pro -->
+		<link rel="stylesheet"
+			href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+		<!-- Font Awesome -->
+		<link rel="stylesheet" href="./plugins/fontawesome-free/css/all.min.css">
+		<!-- SweetAlert2 -->
+		<link rel="stylesheet" href="./plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+		<!-- Toastr -->
+		<link rel="stylesheet" href="./plugins/toastr/toastr.min.css">
+		<!-- Theme style -->
+		<link rel="stylesheet" href="./css/adminlte.min.css">
+	</head>
+	<body class="hold-transition lockscreen">
+		<!-- Automatic element centering -->
+		<div class="lockscreen-wrapper">
+			<div class="lockscreen-logo">
+				<a href="#"><b>请输入</b>验证码</a>
+			</div>
+			<!-- User name -->
+			<div class="lockscreen-name" id="emailShow"></div>
+
+			<!-- START LOCK SCREEN ITEM -->
+			<div class="lockscreen-item">
+				<!-- lockscreen image -->
+				<div class="lockscreen-image">
+					<img src="" id="userAvator" alt="User Image">
+				</div>
+				<!-- /.lockscreen-image -->
+
+				<!-- lockscreen credentials (contains the form) -->
+				<form class="lockscreen-credentials">
+					<div class="input-group">
+						<input type="password" class="form-control" name="emailCode" id="emailCode"
+							placeholder="emailCode">
+						<div class="input-group-append">
+							<button type="button" class="btn" id="checkCodeBtn">
+								<i class="fas fa-arrow-right text-muted" id="arraow"></i>
+							</button>
+						</div>
+					</div>
+				</form>
+
+			</div>
+			<div class="lockscreen-footer text-center">
+				please input your email code
+			</div>
+		</div>
+		<!-- jQuery -->
+		<script src="./plugins/jquery/jquery.min.js"></script>
+		<!-- Bootstrap 4 -->
+		<script src="./plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<script src="./plugins/sweetalert2/sweetalert2.min.js"></script>
+		<script src="./plugins/toastr/toastr.min.js"></script>
+		<script>
+			//获得登录页面  邮箱ok的操作  传过来的两个参数
+			let url=new URL(location.href)
+			console.log(url.search)
+			let params=new URLSearchParams(url.search.slice(1));
+			console.log(location.href)
+			let email=params.get("email");
+			let image=params.get("image");
+			console.log(image)
+			if(email){
+				$("#userAvator").prop("src",`img/${image}`);
+				$("#emailShow").text(email);
+				toastr.success("验证码已经发送到了邮箱，请去查收");
+			}else{
+				$("#arraow").hide();
+			}
+			$("#checkCodeBtn").click(() => {
+
+				$.post(`http://127.0.0.1:8080/admin/codeLogin`,{"email":email,"code":$("#emailCode").val()},response=>{
+
+					let {
+							status,
+							msg,
+							data
+					}=response;
+					
+					if (status=="2005")
+						toastr.error("验证码输入错误");
+					if (status=="2004")
+						location.replace("login.html?error=timeOut");
+					if (status=="1001"){
+						localStorage.setItem("token",data)
+						location.replace("pages/main.html?email="+email);
+					}
+			})
+
+				//toastr.error("验证码输入错误");
+				//toastr.error("邮箱验证码已过期,请重新登录");
+				//location.replace("/login.html?flag=true");
+			});
+		</script>
+
+	</body>
+</html>
