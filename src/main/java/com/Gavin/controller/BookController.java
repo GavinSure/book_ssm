@@ -3,9 +3,11 @@ package com.Gavin.controller;
 
 
 import com.Gavin.common.ServerResponse;
+import com.Gavin.common.StatusEnum;
 import com.Gavin.entity.Book;
 import com.Gavin.common.PageInfo;
 import com.Gavin.entity.BookType;
+import com.Gavin.exception.MyRuntimeException;
 import com.Gavin.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -48,13 +50,17 @@ public class BookController {
         return ServerResponse.success(secondType);
     }
 
-    @GetMapping("/addOrUpdateBook")
+    @PostMapping ("/addOrUpdateBook")
     public ServerResponse<?> addOrUpdateBook(String bookName,String authorName,String firstTypeId,String secondTypeId,String imgUrl,String description){
         Book book=new Book();
         book.setBookName(bookName);
         book.setAuthorName(authorName);
-        book.setFirstTypeName(firstTypeId);
-        book.setSecondTypeName(secondTypeId);
+        int first=Integer.parseInt(firstTypeId);
+        int second=Integer.parseInt(secondTypeId);
+        if (first==-1||second==-1)
+            throw new MyRuntimeException(StatusEnum.BOOKTYPE_NOT_SELECTER);
+        book.setFirstTypeId(first);
+        book.setSecondTypeId(second);
         book.setImgUrl(imgUrl);
         book.setDescription(description);
         bookService.addOrUpdateBook(book);
@@ -62,7 +68,7 @@ public class BookController {
     }
 
     @PostMapping("/imgupload")
-    public String imgupload(HttpServletRequest request, MultipartFile image) throws IOException {
+    public ServerResponse<String> imgupload(HttpServletRequest request, MultipartFile image) throws IOException {
         //创建目录
         String superDirectory=request
                 .getServletContext().getRealPath("bookImg");
@@ -78,6 +84,7 @@ public class BookController {
 
         //文件上传
         image.transferTo(new File(targetDirectory,targetFileName+"."+extension));           //文件写入磁盘
-        return "http://127.0.0.1:8080/bookImg/"+curDateStr+"/"+targetFileName+"."+extension;
+        String img="http://127.0.0.1:8080/bookImg/"+curDateStr+"/"+targetFileName+"."+extension;
+        return ServerResponse.success(img);
     }
 }
