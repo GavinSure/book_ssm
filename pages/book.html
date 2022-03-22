@@ -389,7 +389,7 @@
     $("#bookImage").change(function () {
         let uploadFile=this.files[0];
         let formData=new FormData();
-        formData.append("uploadImage",uploadFile);  //传值为form表单里的值
+        formData.append("image",uploadFile);  //传值为form表单里的值
 
         $.ajax({
             type:"post",
@@ -399,12 +399,38 @@
             processData:false,
             contentType:false,
             success:function (response){
-                let {data}=response;
-                $("#showUploadImage").prop("src",data);
-                $("#uploadMsg").text("文件上传成功").css("color","red");
-                $("#imgUrl").val(data);
+                let {
+                    status,
+                    msg,
+                    data
+                }=response;
+                console.log(response);
+                if (status==1001){
+                    $("#showUploadImage").prop("src",data);
+                    $("#uploadMsg").text("文件上传成功").css("color","green");
+                    $("#imgUrl").val(data);
+                }else {
+                    $("#uploadMsg").text("文件上传失败").css("color","red");
+                }
             }
         })
+    })
+    $("#saveBtn").click(function () {
+        let info=$("#dataForm").serialize();
+        console.log(info);
+        $.post("http://127.0.0.1:8080/book/addOrUpdateBook",info,response=>{
+            let {
+                status,
+                msg,
+                data
+            }=response;
+            if (status==1001){
+                alert("添加成功！");
+                $("#modal-default").modal('hide');
+            }else {
+                alert(msg);
+            }
+        },"json")
     })
 </script>
 </html>
