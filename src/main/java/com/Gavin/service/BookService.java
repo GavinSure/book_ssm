@@ -21,4 +21,6 @@ public interface BookService {
     List<BookType> findSecondType(int parentId);
 
     boolean addOrUpdateBook(Book book);
+
+    void deleteById(int id);
 }

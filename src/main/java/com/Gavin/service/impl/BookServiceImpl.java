@@ -72,5 +72,12 @@ public class BookServiceImpl implements BookService {
          return true;
     }
 
+    @Override
+    public void deleteById(int id) {
+        BookExample bookExample=new BookExample();
+        bookExample.createCriteria().andBookIdEqualTo(id);
+        bookMapper.deleteByExample(bookExample);
+    }
+
 
 }

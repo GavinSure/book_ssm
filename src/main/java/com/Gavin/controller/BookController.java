@@ -11,10 +11,7 @@ import com.Gavin.exception.MyRuntimeException;
 import com.Gavin.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -86,5 +83,13 @@ public class BookController {
         image.transferTo(new File(targetDirectory,targetFileName+"."+extension));           //文件写入磁盘
         String img="http://127.0.0.1:8080/bookImg/"+curDateStr+"/"+targetFileName+"."+extension;
         return ServerResponse.success(img);
+    }
+
+    @PostMapping("/delete")             //传递数组应为post
+    public ServerResponse<?> delete(@RequestParam("ids[]") String[] ids){
+        for (String id:ids){
+            bookService.deleteById(Integer.parseInt(id));
+        }
+        return ServerResponse.success();
     }
 }
