@@ -49,13 +49,13 @@
     </bean>
 
     <!--11.配置拦截器-->
-<!--    <mvc:interceptors>
-        &lt;!&ndash;登陆权限拦截&ndash;&gt;
+    <mvc:interceptors>
+        <!--登陆权限拦截-->
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/admin/**"/>
             <ref bean="loginInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>-->
+    </mvc:interceptors>
 
 </beans>
